@@ -154,6 +154,15 @@ form.addEventListener("submit", (e) => {
   previewCars.push(newCar);
   renderAll();
 
+  // Notification: "Car added!"
+  const toast = document.createElement("div");
+  toast.textContent = "Car added!";
+  toast.className = "toast add";
+  document.body.appendChild(toast);
+
+  // Hide message automatically
+  setTimeout(() => toast.remove(), 1500);
+
   form.reset();
   monthsBadge.textContent = monthsEl.value;
   brandEl.focus();
@@ -173,6 +182,14 @@ result.addEventListener("click", (e) => {
   if (!Number.isNaN(idx)) {
     previewCars.splice(idx, 1);
     renderAll();
+
+    // Notification: "Car deleted!"
+    const toast = document.createElement("div");
+    toast.textContent = "Car deleted!";
+    toast.className = "toast delete";
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 1500);
   }
 });
 
@@ -197,21 +214,21 @@ if (galleryImg) {
 
   galleryImg.addEventListener("mouseenter", () => {
 
-        // Fade-out
-        galleryImg.classList.remove("fade-in");
-        galleryImg.classList.add("fade-out");
+    // Fade-out
+    galleryImg.classList.remove("fade-in");
+    galleryImg.classList.add("fade-out");
 
-        // Wait animation
-        setTimeout(() => {
-            // Change image
-            currentIndex = (currentIndex + 1) % galleryFiles.length;
-            galleryImg.src = `assets/images/${galleryFiles[currentIndex]}`;
+    // Wait animation
+    setTimeout(() => {
+      // Change image
+      currentIndex = (currentIndex + 1) % galleryFiles.length;
+      galleryImg.src = `assets/images/${galleryFiles[currentIndex]}`;
 
-            // Fade-in
-            galleryImg.classList.remove("fade-out");
-            galleryImg.classList.add("fade-in");
-        }, 550);
-    });
+      // Fade-in
+      galleryImg.classList.remove("fade-out");
+      galleryImg.classList.add("fade-in");
+    }, 550);
+  });
 
 }
 

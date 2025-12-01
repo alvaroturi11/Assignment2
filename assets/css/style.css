@@ -412,3 +412,39 @@ input[type="range"] {
 .table-compact tbody tr:hover td {
     background: #fff9ee;
 }
+
+/* Notification (“Car added!”) */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--brand);
+    padding: .7rem 1rem;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    z-index: 9999;
+    animation: slide-in .4s ease;
+}
+
+/* Green notification for "Car added!" */
+.toast.add {
+    background: #28a745; /* verde éxito */
+}
+
+/* Red notification for "Car deleted!" */
+.toast.delete {
+    background: #d9534f; /* rojo eliminar */
+}
+
+@keyframes slide-in {
+    from { 
+        transform: translateY(-15px); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateY(0); 
+        opacity: 1; 
+    }
+}

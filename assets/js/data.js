@@ -122,6 +122,15 @@ form.addEventListener("submit", (evt) => {
   const newcar = { regNo: reg, make, model, colour, fuelType, seats };
   cars.push(newcar);
   displayRecs();
+
+  // Notification: "Car added!"
+  const toast = document.createElement("div");
+  toast.textContent = "Car added!";
+  toast.className = "toast add";
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.remove(), 1500);
+
   form.reset();
   populateModelsForMake("");     // disable Model again until a make is chosen
   form.elements[0].focus();
@@ -135,6 +144,15 @@ table.addEventListener("click", (evt) => {
   if (idx >= 0) {
     cars.splice(idx, 1);
     displayRecs();
+
+    // Notification: "Car deleted!"
+    const toast = document.createElement("div");
+    toast.textContent = "Car deleted!";
+    toast.className = "toast delete";
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 1500);
+
     renderFilterResults([]);
     searchOut.textContent = "";
   }
