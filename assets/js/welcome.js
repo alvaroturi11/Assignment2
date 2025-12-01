@@ -196,12 +196,22 @@ if (galleryImg) {
   let currentIndex = 0; // YellowLamborghini is the first picture
 
   galleryImg.addEventListener("mouseenter", () => {
-    // advance to the next image (and return to the beginning at the end)
-    currentIndex = (currentIndex + 1) % galleryFiles.length;
 
-    // update image path
-    galleryImg.src = `assets/images/${galleryFiles[currentIndex]}`;
-  });
+        // Fade-out
+        galleryImg.classList.remove("fade-in");
+        galleryImg.classList.add("fade-out");
+
+        // Wait animation
+        setTimeout(() => {
+            // Change image
+            currentIndex = (currentIndex + 1) % galleryFiles.length;
+            galleryImg.src = `assets/images/${galleryFiles[currentIndex]}`;
+
+            // Fade-in
+            galleryImg.classList.remove("fade-out");
+            galleryImg.classList.add("fade-in");
+        }, 550);
+    });
 
 }
 
