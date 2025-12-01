@@ -63,6 +63,21 @@ const renderStats = () => {
 };
 renderStats();
 
+// Color distribution bar
+const bar = document.querySelector('#colourBar');
+const { colourCount } = getStats();
+
+Object.entries(colourCount).forEach(([col, qty]) => {
+  const block = document.createElement('div');
+  block.style.width = `${qty * 20}px`;   // puedes ajustar el tamaño
+  block.style.height = '14px';
+  block.style.background = col;
+  block.style.marginRight = '6px';
+  block.style.border = '1px solid #0002';
+  block.style.borderRadius = '4px';
+  bar.appendChild(block);
+});
+
 // --------- Make → Models mini demo (result appears under the <select>) ---------
 const makeSelect = $("#makeSelect");
 
