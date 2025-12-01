@@ -152,3 +152,21 @@ fuelForm.addEventListener("reset", (e) => {
 
 // Initial paint
 renderFuel();
+
+// --------- Rotación de imagen en la sección About ---------
+const aboutImg = document.querySelector("#aboutImg");
+
+if (aboutImg) {
+  const aboutImages = [
+    "SportCar.jpg",
+    "sport2.jpg",
+    "sport3.jpg"
+  ];
+
+  let currentIndex = 0; // SportCar.jpg es la inicial
+
+  setInterval(() => {
+    currentIndex = (currentIndex + 1) % aboutImages.length;
+    aboutImg.src = `assets/images/${aboutImages[currentIndex]}`;
+  }, 5000); // 5000 ms = 5 segundos
+}
