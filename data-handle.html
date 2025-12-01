@@ -4,20 +4,20 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>DriveSphere — Data Manipulation</title>
+    <title>DriveSphere — Data (Handlebars)</title>
     <link rel="stylesheet" href="assets/css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.min.js"></script>
     <script defer src="assets/js/cars-data.js"></script>
-    <script defer src="assets/js/data.js"></script>
+    <script defer src="assets/js/data-handle.js"></script>
 </head>
 
 <body>
     <header class="site-header">
         <h1>DriveSphere</h1>
-        <!-- Primary navigation -->
         <nav class="nav">
             <a href="index.html">Welcome</a>
-            <a class="active" href="data.html">Data</a>
-            <a href="data-handle.html">Data (HB)</a>
+            <a href="data.html">Data</a>
+            <a class="active" href="data-handle.html">Data (HB)</a>
             <a href="about.html">About</a>
         </nav>
     </header>
@@ -28,17 +28,15 @@
             <div class="panel-left">
                 <h3>Add a new car</h3>
 
-                <!-- Add-car form (creates a new object into the array) -->
-                <form id="addCarForm" class="form-grid">
+                <form id="hbAddForm" class="form-grid" autocomplete="off">
                     <label>Registration Number
-                        <input type="text" name="reg" id="reg" required placeholder="e.g., 221-KK-1234" />
+                        <input type="text" name="regNo" id="hbReg" required placeholder="e.g., 221-KK-1234" />
                     </label>
 
-                    <!-- Make: free text aided by datalist -->
                     <label>Make
-                        <input type="text" name="make" id="make" placeholder="Start typing a make…" list="makeList"
-                            autocomplete="off" />
-                        <datalist id="makeList">
+                        <input type="text" name="make" id="hbMake"
+                            placeholder="Start typing a make…" list="hbMakeList" autocomplete="off" />
+                        <datalist id="hbMakeList">
                             <option value="Ford"></option>
                             <option value="Hyundai"></option>
                             <option value="Toyota"></option>
@@ -63,19 +61,18 @@
                         </datalist>
                     </label>
 
-                    <!-- Model: enabled/filtered after a valid make -->
                     <label>Model
-                        <input type="text" name="model" id="model" placeholder="Select a make first" list="modelList"
-                            autocomplete="off" disabled />
-                        <datalist id="modelList"></datalist>
+                        <input type="text" name="model" id="hbModel" placeholder="Select a make first"
+                            list="hbModelList" autocomplete="off" disabled />
+                        <datalist id="hbModelList"></datalist>
                     </label>
 
                     <label>Colour
-                        <input type="text" name="colour" id="colour" required placeholder="e.g., Blue" />
+                        <input type="text" name="colour" id="hbColour" required placeholder="e.g., Blue" />
                     </label>
 
                     <label>Fuel type
-                        <select id="fuelType" name="fuelType" required>
+                        <select name="fuelType" id="hbFuel" required>
                             <option value="" disabled selected hidden>Select fuel type</option>
                             <option value="Petrol">Petrol</option>
                             <option value="Diesel">Diesel</option>
@@ -86,7 +83,8 @@
                     </label>
 
                     <label>Seats
-                        <input type="number" id="seats" name="seats" min="2" max="9" required placeholder="e.g., 5" />
+                        <input type="number" name="seats" id="hbSeats" min="2" max="9" required
+                            placeholder="e.g., 5" />
                     </label>
 
                     <div class="form-actions">
@@ -99,36 +97,41 @@
 
                 <h3>Search</h3>
                 <div class="search-rows">
-                    <!-- Row 1: find by regNo -->
                     <div class="row">
                         <label>Find by Registration
-                            <input type="text" id="searchReg" placeholder="e.g., 211-WD-234" />
+                            <input type="text" id="hbSearchReg" placeholder="e.g., 211-WD-234" />
                         </label>
-                        <button class="btn" id="btnFind" type="button">Find</button>
+                        <button class="btn" id="hbBtnFind" type="button">Find</button>
                     </div>
 
-                    <!-- Row 2: filter by make (and optional colour) -->
                     <div class="row">
                         <label>Filter by Make
-                            <input type="text" id="searchMake" placeholder="e.g., toyota" />
+                            <input type="text" id="hbSearchMake" placeholder="e.g., toyota" />
                         </label>
                         <label>Filter by Colour (optional)
-                            <input type="text" id="searchColour" placeholder="e.g., blue" />
+                            <input type="text" id="hbSearchColour" placeholder="e.g., blue" />
                         </label>
-                        <button class="btn" id="btnFilter" type="button">Filter</button>
-                        <button class="btn ghost" id="btnClearSearch" type="button">Clear</button>
+                        <button class="btn" id="hbBtnFilter" type="button">Filter</button>
+                        <button class="btn ghost" id="hbBtnClear" type="button">Clear</button>
                     </div>
                 </div>
 
-                <!-- Search feedback / results count -->
-                <div id="searchOutput" class="muted" style="margin-top:.5rem;"></div>
+                <p id="hbSearchOutput" class="muted" style="margin-top:.5rem;"></p>
+
+                <hr />
+
+                <h3>Dataset actions</h3>
+                <div class="form-actions">
+                    <button class="btn ghost" id="saveBtn" type="button">Save dataset</button>
+                    <button class="btn ghost" id="loadBtn" type="button">Load dataset</button>
+                </div>
             </div>
 
             <!-- RIGHT COLUMN: main table + filtered results table -->
             <div class="panel-right">
                 <h3>Cars table</h3>
                 <div class="table-wrap">
-                    <table id="carsTable" class="table table-compact">
+                    <table id="hbCarsTable" class="table table-compact">
                         <thead>
                             <tr>
                                 <th>Reg. No</th>
@@ -140,14 +143,14 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="carsBody"></tbody>
+                        <tbody id="hbCarsBody"></tbody>
                     </table>
                 </div>
-                <p class="muted" id="countLabel"></p>
+                <p class="muted" id="hbCountLabel"></p>
 
                 <h3 style="margin-top:1rem;">Filter results</h3>
                 <div class="table-wrap">
-                    <table id="filterTable" class="table table-compact">
+                    <table id="hbFilterTable" class="table table-compact">
                         <thead>
                             <tr>
                                 <th>Reg. No</th>
@@ -158,12 +161,29 @@
                                 <th>Seats</th>
                             </tr>
                         </thead>
-                        <tbody id="filterBody"></tbody>
+                        <tbody id="hbFilterBody"></tbody>
                     </table>
                 </div>
             </div>
         </section>
     </main>
+
+    <!-- TEMPLATE HANDLEBARS -->
+    <script id="cars-template" type="text/x-handlebars-template">
+        {{#each cars}}
+        <tr>
+            <td>{{regNo}}</td>
+            <td>{{make}}</td>
+            <td>{{model}}</td>
+            <td>{{colour}}</td>
+            <td>{{fuelType}}</td>
+            <td>{{seats}}</td>
+            <td>
+                <button class="btn small" data-del="{{regNo}}">Delete</button>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
 
 </body>
 

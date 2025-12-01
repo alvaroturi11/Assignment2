@@ -413,6 +413,12 @@ input[type="range"] {
     background: #fff9ee;
 }
 
+/* Reg. No: on a single line */
+.table-compact th:first-child,
+.table-compact td:first-child {
+    white-space: nowrap;
+}
+
 /* Notification (“Car added!”) */
 .toast {
     position: fixed;

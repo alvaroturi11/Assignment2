@@ -7,6 +7,27 @@ const titleCase = (s) =>
 const euros = (n) =>
   new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" }).format(n);
 
+// --------- Load cars from Data (Handlebars) or fallback to cars[] ---------
+const STORAGE_KEY = "ds-handle-cars";
+
+const loadCarsForAbout = () => {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed; // dataset de la página Data (HB)
+      }
+    } catch (e) {
+      console.warn("Error reading ds-handle-cars from localStorage, using cars[] instead.", e);
+    }
+  }
+  // If there is no data in LocalStorage, we use the cars array from cars-data.js
+  return typeof cars !== "undefined" ? cars : [];
+};
+
+const carsSource = loadCarsForAbout();
+
 // --------- Creator JSON object ---------
 const creator = {
   name: "Álvaro Turiégano",
@@ -32,11 +53,11 @@ const renderCreator = () => {
 };
 renderCreator();
 
-// --------- Dataset stats (uses global `cars` from cars-data.js) ---------
+// --------- Dataset stats (uses carsSource from Data (HB)) ---------
 const getStats = () => {
-  const total = cars.length;
-  const makes = [...new Set(cars.map(c => c.make))];
-  const colourCount = cars.reduce((acc, c) => {
+  const total = carsSource.length;
+  const makes = [...new Set(carsSource.map(c => c.make))];
+  const colourCount = carsSource.reduce((acc, c) => {
     const key = c.colour.toLowerCase();
     acc[key] = (acc[key] || 0) + 1;
     return acc;
@@ -63,13 +84,13 @@ const renderStats = () => {
 };
 renderStats();
 
-// Color distribution bar
+// Colour distribution bar
 const bar = document.querySelector('#colourBar');
 const { colourCount } = getStats();
 
 Object.entries(colourCount).forEach(([col, qty]) => {
   const block = document.createElement('div');
-  block.style.width = `${qty * 20}px`;   // puedes ajustar el tamaño
+  block.style.width = `${qty * 20}px`;
   block.style.height = '14px';
   block.style.background = col;
   block.style.marginRight = '6px';
@@ -84,7 +105,7 @@ const makeSelect = $("#makeSelect");
 // On change, show the models for the selected make below the select
 makeSelect.addEventListener("change", () => {
   const make = makeSelect.value;
-  const models = [...new Set(cars.filter(c => c.make === make).map(c => c.model))].sort();
+  const models = [...new Set(carsSource.filter(c => c.make === make).map(c => c.model))].sort();
 
   const html = `
     <div id="modelsResult" style="margin-top: 0.6rem;">
@@ -101,13 +122,14 @@ makeSelect.addEventListener("change", () => {
 
 // Populate the select with distinct makes from `cars`
 (() => {
-  const makes = [...new Set(cars.map(c => c.make))].sort();
+  const makes = [...new Set(carsSource.map(c => c.make))].sort();
+
   makeSelect.innerHTML =
     `<option value="" disabled selected hidden>Select a make…</option>` +
     makes.map(m => `<option value="${m}">${m}</option>`).join("");
 })();
 
-// --------- Fuel cost estimator (right panel) ---------
+// Fuel cost estimator (right panel)
 const tankEl = $("#tankCap");
 const avgEl = $("#avgPerDay");
 const priceEl = $("#fuelPrice");
@@ -168,7 +190,7 @@ fuelForm.addEventListener("reset", (e) => {
 // Initial paint
 renderFuel();
 
-// --------- Rotación de imagen en la sección About ---------
+// Image rotation in the About section
 const aboutImg = document.querySelector("#aboutImg");
 
 if (aboutImg) {
@@ -178,10 +200,10 @@ if (aboutImg) {
     "sport3.jpg"
   ];
 
-  let currentIndex = 0; // SportCar.jpg es la inicial
+  let currentIndex = 0;
 
   setInterval(() => {
     currentIndex = (currentIndex + 1) % aboutImages.length;
     aboutImg.src = `assets/images/${aboutImages[currentIndex]}`;
-  }, 5000); // 5000 ms = 5 segundos
+  }, 5000); // each 5 segundos
 }
