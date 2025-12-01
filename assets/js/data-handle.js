@@ -101,12 +101,13 @@ const searchSeatsEl = document.querySelector("#hbSearchSeats");
 
 // Cars table
 const render = (data = garage) => {
-  carsBody.innerHTML = rowTemplate({ cars: data });
+  const ordered = [...data].reverse();
+  carsBody.innerHTML = rowTemplate({ cars: ordered });
 
-  if (data.length === 0) {
+  if (ordered.length === 0) {
     countLabel.textContent = "No cars in the array.";
   } else {
-    countLabel.textContent = `Total records: ${data.length}`;
+    countLabel.textContent = `Total records: ${ordered.length}`;
   }
 };
 
