@@ -79,11 +79,14 @@ const saveGarage = () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(garage));
 };
 
-// Handlebars
+// Handlebars: register partial + compile main template
+const rowPartialSrc = document.querySelector("#car-row-partial").innerHTML;
+Handlebars.registerPartial("carRow", rowPartialSrc);
+
 const rowTemplateSrc = document.querySelector("#cars-template").innerHTML;
 const rowTemplate = Handlebars.compile(rowTemplateSrc);
 
-// Elementos DOM principales
+// Main DOM eleements
 const hbForm = document.querySelector("#hbAddForm");
 const carsBody = document.querySelector("#hbCarsBody");
 const countLabel = document.querySelector("#hbCountLabel");
@@ -93,15 +96,17 @@ const searchRegEl = document.querySelector("#hbSearchReg");
 const searchMakeEl = document.querySelector("#hbSearchMake");
 const searchColourEl = document.querySelector("#hbSearchColour");
 const searchOut = document.querySelector("#hbSearchOutput");
+const searchFuelEl = document.querySelector("#hbSearchFuel");
+const searchSeatsEl = document.querySelector("#hbSearchSeats");
 
 // Cars table
-const render = () => {
-  carsBody.innerHTML = rowTemplate({ cars: garage });
+const render = (data = garage) => {
+  carsBody.innerHTML = rowTemplate({ cars: data });
 
-  if (garage.length === 0) {
+  if (data.length === 0) {
     countLabel.textContent = "No cars in the array.";
   } else {
-    countLabel.textContent = `Total records: ${garage.length}`;
+    countLabel.textContent = `Total records: ${data.length}`;
   }
 };
 
@@ -205,6 +210,8 @@ document.querySelector("#hbBtnFind").addEventListener("click", () => {
 document.querySelector("#hbBtnFilter").addEventListener("click", () => {
   const make = (searchMakeEl.value || "").trim().toLowerCase();
   const colour = (searchColourEl.value || "").trim().toLowerCase();
+  const fuel = (searchFuelEl.value || "").trim();
+  const minSeats = Number(searchSeatsEl.value || "");
 
   if (!make) {
     searchOut.textContent = "Type a make to filter.";
@@ -215,7 +222,9 @@ document.querySelector("#hbBtnFilter").addEventListener("click", () => {
   const filtered = garage.filter((c) => {
     const okMake = c.make.toLowerCase() === make;
     const okColour = colour ? c.colour.toLowerCase() === colour : true;
-    return okMake && okColour;
+    const okFuel = fuel ? c.fuelType === fuel : true;
+    const okSeats = minSeats ? c.seats >= minSeats : true;
+    return okMake && okColour && okFuel && okSeats;
   });
 
   searchOut.textContent = filtered.length
@@ -230,22 +239,8 @@ document.querySelector("#hbBtnClear").addEventListener("click", () => {
   searchRegEl.value = "";
   searchMakeEl.value = "";
   searchColourEl.value = "";
+  searchFuelEl.value = "";
+  searchSeatsEl.value = "";
   searchOut.textContent = "";
   renderFilterResults([]);
-});
-
-// Save / Load dataset
-const saveBtn = document.querySelector("#saveBtn");
-const loadBtn = document.querySelector("#loadBtn");
-
-saveBtn.addEventListener("click", () => {
-  saveGarage();
-  alert("Dataset saved to LocalStorage.");
-});
-
-loadBtn.addEventListener("click", () => {
-  garage = loadGarage();
-  render();
-  renderFilterResults([]);
-  alert("Dataset loaded from LocalStorage.");
 });

@@ -34,8 +34,8 @@
                     </label>
 
                     <label>Make
-                        <input type="text" name="make" id="hbMake"
-                            placeholder="Start typing a make…" list="hbMakeList" autocomplete="off" />
+                        <input type="text" name="make" id="hbMake" placeholder="Start typing a make…" list="hbMakeList"
+                            autocomplete="off" />
                         <datalist id="hbMakeList">
                             <option value="Ford"></option>
                             <option value="Hyundai"></option>
@@ -83,8 +83,7 @@
                     </label>
 
                     <label>Seats
-                        <input type="number" name="seats" id="hbSeats" min="2" max="9" required
-                            placeholder="e.g., 5" />
+                        <input type="number" name="seats" id="hbSeats" min="2" max="9" required placeholder="e.g., 5" />
                     </label>
 
                     <div class="form-actions">
@@ -111,6 +110,25 @@
                         <label>Filter by Colour (optional)
                             <input type="text" id="hbSearchColour" placeholder="e.g., blue" />
                         </label>
+                        <label>Filter by Fuel (optional)
+                            <select id="hbSearchFuel">
+                                <option value="">Any fuel</option>
+                                <option value="Petrol">Petrol</option>
+                                <option value="Diesel">Diesel</option>
+                                <option value="Hybrid">Hybrid</option>
+                                <option value="Plug-in Hybrid">Plug-in Hybrid</option>
+                                <option value="Electric">Electric</option>
+                            </select>
+                        </label>
+                        <label>Min. seats (optional)
+                            <select id="hbSearchSeats">
+                                <option value="">Any</option>
+                                <option value="2">2+</option>
+                                <option value="4">4+</option>
+                                <option value="5">5+</option>
+                                <option value="7">7+</option>
+                            </select>
+                        </label>
                         <button class="btn" id="hbBtnFilter" type="button">Filter</button>
                         <button class="btn ghost" id="hbBtnClear" type="button">Clear</button>
                     </div>
@@ -118,13 +136,6 @@
 
                 <p id="hbSearchOutput" class="muted" style="margin-top:.5rem;"></p>
 
-                <hr />
-
-                <h3>Dataset actions</h3>
-                <div class="form-actions">
-                    <button class="btn ghost" id="saveBtn" type="button">Save dataset</button>
-                    <button class="btn ghost" id="loadBtn" type="button">Load dataset</button>
-                </div>
             </div>
 
             <!-- RIGHT COLUMN: main table + filtered results table -->
@@ -168,22 +179,27 @@
         </section>
     </main>
 
-    <!-- TEMPLATE HANDLEBARS -->
+    <!-- PARTIAL: una fila de coche -->
+    <script id="car-row-partial" type="text/x-handlebars-template">
+    <tr>
+        <td>{{regNo}}</td>
+        <td>{{make}}</td>
+        <td>{{model}}</td>
+        <td>{{colour}}</td>
+        <td>{{fuelType}}</td>
+        <td>{{seats}}</td>
+        <td>
+            <button class="btn small" data-del="{{regNo}}">Delete</button>
+        </td>
+    </tr>
+</script>
+
+    <!-- TEMPLATE PRINCIPAL: recorre el array y usa el partial -->
     <script id="cars-template" type="text/x-handlebars-template">
-        {{#each cars}}
-        <tr>
-            <td>{{regNo}}</td>
-            <td>{{make}}</td>
-            <td>{{model}}</td>
-            <td>{{colour}}</td>
-            <td>{{fuelType}}</td>
-            <td>{{seats}}</td>
-            <td>
-                <button class="btn small" data-del="{{regNo}}">Delete</button>
-            </td>
-        </tr>
-        {{/each}}
-    </script>
+    {{#each cars}}
+        {{> carRow}}
+    {{/each}}
+</script>
 
 </body>
 
