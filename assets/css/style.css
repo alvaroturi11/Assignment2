@@ -153,6 +153,14 @@ ul {
     box-shadow: var(--shadow);
 }
 
+.art img {
+    transition: filter .9s ease;
+}
+
+.art img:hover {
+    filter: brightness(0.5);
+}
+
 #galleryCar {
     width: 100%;
     height: 600px;
